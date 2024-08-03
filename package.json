@@ -1,0 +1,9 @@
+{
+  "name": "metaphoto.backend",
+  "version": "1.0.0",
+  "description": "Backend for the MetaPhoto app",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Nelson Saloj",
+  "license": "MIT"
+}
