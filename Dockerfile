@@ -1,4 +1,4 @@
-FROM node:20.15.1
+FROM node:18.20.4
 
 RUN apt upgrade
 
