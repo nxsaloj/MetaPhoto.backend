@@ -9,4 +9,4 @@ RUN npm install
 
 COPY . .
 
-ENTRYPOINT [ "npm","run","awake" ]
+ENTRYPOINT ["sh", "entrypoint.sh"]
