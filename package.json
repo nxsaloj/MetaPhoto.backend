@@ -5,5 +5,8 @@
   "main": "index.js",
   "scripts": {},
   "author": "Nelson Saloj",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
 }
