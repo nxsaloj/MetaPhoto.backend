@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Backend for the MetaPhoto app",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "awake": "tail -f /dev/null",
+    "build": "npx tsc app.ts"
+  },
   "author": "Nelson Saloj",
   "license": "MIT",
   "devDependencies": {
+    "aws-lambda": "^1.0.7",
     "typescript": "^5.5.4"
   }
 }
