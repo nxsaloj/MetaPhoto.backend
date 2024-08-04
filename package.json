@@ -9,6 +9,7 @@
   "author": "Nelson Saloj",
   "license": "MIT",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.142",
     "@types/node": "^22.1.0",
     "aws-lambda": "^1.0.7",
     "typescript": "^5.5.4"
