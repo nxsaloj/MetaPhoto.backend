@@ -1,12 +1,13 @@
-FROM node:18.20.4
-
-RUN apt upgrade
-
+FROM python:alpine
+RUN apk update && \
+    apk upgrade && \
+    apk add bash && \
+    apk add npm && \
+    apk add --no-cache --virtual build-deps build-base gcc && \
+    pip install aws-sam-cli && \
+    apk del build-deps && \
+    npm i -g esbuild
+RUN mkdir /home/app
 WORKDIR /home/app
-COPY package.json package-lock.json* ./
-
-RUN npm install
-
-COPY . .
-
-ENTRYPOINT ["sh", "entrypoint.sh"]
+EXPOSE 3000
+ENTRYPOINT ["sh", "scripts/entrypoint.sh"]
