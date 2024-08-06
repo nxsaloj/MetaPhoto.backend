@@ -5,6 +5,7 @@ import {
   Album,
   UserApi,
   User,
+  Filters,
   Pagination,
   Paginated,
 } from "../types";
@@ -78,5 +79,24 @@ export const getFilteredPhotos = async (
   filters?: Filters
 ): Promise<Paginated<Photo[]>> => {
   let enrichedPhotos = await getAllPhotos();
+  enrichedPhotos = enrichedPhotos.filter((photo) =>
+    photoFilter(photo, filters)
+  );
   return ToPaginatedItems<Photo>(enrichedPhotos, pagination);
+};
+
+const photoFilter = (photo: Photo, filters?: Filters) => {
+  if (!filters) return true;
+
+  let keep: Boolean = true;
+  if (filters.title) {
+    keep = photo.title.includes(filters.title);
+  }
+  if (filters.album) {
+    keep &&= Boolean(photo.album?.title.includes(filters.album));
+  }
+  if (filters.user) {
+    keep &&= Boolean(photo.album?.user?.email === filters.user);
+  }
+  return keep;
 };

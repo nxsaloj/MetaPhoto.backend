@@ -5,6 +5,7 @@ import {
   Album,
   UserApi,
   User,
+  Filters,
   Pagination,
   Paginated,
 } from "./types";
@@ -38,6 +39,20 @@ export const MapPhotoApiToPhoto = (data: PhotoApi, album?: Album): Photo => {
     album,
   };
 };
+
+export const ParamsToFilter = (
+  params: {
+    [key: string]: string | undefined;
+  } | null
+): Filters => {
+  const filters: Filters = {
+    title: params?.["title"],
+    album: params?.["album.title"],
+    user: params?.["album.user.email"],
+  };
+  return filters;
+};
+
 export const MapParamsToPagination = (
   params: {
     [key: string]: string | undefined;
