@@ -1,10 +1,16 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from "aws-lambda";
-import { getAllPhotos } from "../controllers/photo-controller";
+import {
+  getAllPhotos,
+  getFilteredPhotos,
+} from "../controllers/photo-controller";
+import { MapParamsToPagination } from "../transformers";
 export const handler = async (
   event: APIGatewayEvent,
   context: Context
 ): Promise<APIGatewayProxyResult> => {
-  const photos = await getAllPhotos();
+  const params = event.queryStringParameters;
+  const photos = await getFilteredPhotos(MapParamsToPagination(params));
+
   return {
     headers: {
       "Content-type": "application/json",

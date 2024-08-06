@@ -1,4 +1,13 @@
-import { Photo, PhotoApi, AlbumApi, Album, UserApi, User } from "../types";
+import {
+  Photo,
+  PhotoApi,
+  AlbumApi,
+  Album,
+  UserApi,
+  User,
+  Pagination,
+  Paginated,
+} from "../types";
 import {
   getAllPhotos as getAllApiPhotos,
   getPhotosById,
@@ -9,6 +18,7 @@ import {
   MapAlbumApiToAlbum,
   MapPhotoApiToPhoto,
   MapUserApiToUser,
+  ToPaginatedItems,
 } from "../transformers";
 
 /**
@@ -61,4 +71,12 @@ export const getAllPhotos = async (): Promise<Photo[]> => {
   });
 
   return photosWithAlbums;
+};
+
+export const getFilteredPhotos = async (
+  pagination: Pagination,
+  filters?: Filters
+): Promise<Paginated<Photo[]>> => {
+  let enrichedPhotos = await getAllPhotos();
+  return ToPaginatedItems<Photo>(enrichedPhotos, pagination);
 };

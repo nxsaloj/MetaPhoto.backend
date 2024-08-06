@@ -1,4 +1,13 @@
-import { Photo, PhotoApi, AlbumApi, Album, UserApi, User } from "./types";
+import {
+  Photo,
+  PhotoApi,
+  AlbumApi,
+  Album,
+  UserApi,
+  User,
+  Pagination,
+  Paginated,
+} from "./types";
 export const MapUserApiToUser = (data: UserApi): User => {
   return {
     id: data.id,
@@ -27,5 +36,39 @@ export const MapPhotoApiToPhoto = (data: PhotoApi, album?: Album): Photo => {
     url: data.url,
     thumbnailUrl: data.thumbnailUrl,
     album,
+  };
+};
+export const MapParamsToPagination = (
+  params: {
+    [key: string]: string | undefined;
+  } | null
+): Pagination => {
+  const pagination: Pagination = {
+    limit: Number(params?.["limit"]) || 0,
+    offset: Number(params?.["offset"]) || 0,
+  };
+  return pagination;
+};
+
+export const ToPaginatedItems = <T>(
+  elements: T[],
+  pagination: Pagination
+): Paginated<T[]> => {
+  let items = elements;
+  const total = items.length;
+  const pages = Math.ceil(total / pagination.limit);
+
+  if (pagination.limit > 0) {
+    items = items.slice(
+      pagination.offset,
+      pagination.offset + pagination.limit
+    );
+  }
+
+  return {
+    items: items,
+    page: Math.ceil(pagination.offset / pagination.limit),
+    pages,
+    total,
   };
 };
