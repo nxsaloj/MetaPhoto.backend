@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  MetaPhoto backend project
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Parameters:
+  BucketBuild:
+    Description: Bucket for build resources
+    Default: ./
+    Type: String
+  Stage:
+    Description: Environment
+    Default: dev
+    Type: String
+    AllowedValues: [dev, prod]
+    ConstraintDescription: Must specify 'dev' or 'prod'
+
+Globals:
+  Function:
+    LoggingConfig:
+      LogFormat: JSON
+
+Conditions:
+  isProd: !Equals [!Ref Stage, prod] # if 'prod' then TRUE, otherwise FALSE
+
+Resources:
+  getAllPhotos:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Fn::If:
+          - isProd
+          - Sub: "s3://${BucketBuild}/backend-app/"
+          - Ref: BucketBuild
+      Handler: src/handlers/get-all-photos.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 2048
+      Timeout: 500
+      Description: Enrich PhotoLibrary data from internal API
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/v1/photos/
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      Buildproperties:
+        Minify: true
+        Target: "es2022"
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/get-all-photos.ts
+  getPhotoById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Fn::If:
+          - isProd
+          - Sub: "s3://${BucketBuild}/backend-app/"
+          - Ref: BucketBuild
+      Handler: src/handlers/get-photo-by-id.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Timeout: 500
+      Description: Enrich PhotoLibrary data from internal API
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/v1/photos/{id}
+            Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      Buildproperties:
+        Minify: true
+        Target: "es2022"
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/get-photo-by-id.ts
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
